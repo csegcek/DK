@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "303524024968",
+    "firebase_url": "https://dkgcek-82baf.firebaseio.com",
+    "project_id": "dkgcek-82baf",
+    "storage_bucket": "dkgcek-82baf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:303524024968:android:0a2d2a524ee4552987053d",
+        "android_client_info": {
+          "package_name": "com.example.dk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "303524024968-65ubv720quba67f0agvqtaiesdc2k5q5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC57_gC1d8vZ9xSswE9Mieag2FfWHklx40"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "303524024968-65ubv720quba67f0agvqtaiesdc2k5q5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
