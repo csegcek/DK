@@ -26,27 +26,18 @@ public class Register extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private ProgressDialog mProgress;
     private DatabaseReference myRef;
-    EditText firstname, lastname, username;
-    EditText dob, empid, desig, org;
+    EditText firstname, lastname, username, email;
+    EditText dateofbirth, empid, desig, org, pass, cpass;
     TextView reg;
-    String email_id, password, cpass;
+    String email_id, password, cpassword;
+    String fname, lname, uname, designation, organization, employeeid, dob;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        firstname = findViewById(R.id.fname);
-        lastname = findViewById(R.id.lname);
-        username = findViewById(R.id.uname);
-        password = findViewById(R.id.password).toString().trim();
-        cpass= findViewById(R.id.cpassword).toString().trim();
-        dob = findViewById(R.id.dob);
-        email_id = findViewById(R.id.email).toString().trim();
-        desig = findViewById(R.id.designation);
-        org = findViewById(R.id.organization);
-        reg = findViewById(R.id.register);
-        empid = findViewById(R.id.empid);
+        getViews(); //user defined
 
         mAuth = FirebaseAuth.getInstance();
         mProgress = new ProgressDialog(this);
@@ -57,15 +48,15 @@ public class Register extends AppCompatActivity {
        reg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(Register.this,"Registerd", Toast.LENGTH_SHORT).show();
-                register();
+                extractText();//User defined
+                register(); //User defined
             }
         });
     }
     private void register()
     {
 
-        if(!TextUtils.isEmpty(email_id) && !TextUtils.isEmpty(password)) {
+        if(check() && validate(password,cpassword)) {
 
             mProgress.setMessage("Signing up...");
             mProgress.show();
@@ -79,30 +70,85 @@ public class Register extends AppCompatActivity {
                                 // Sign in success, update UI with the signed-in user's information
                                 Toast.makeText(Register.this, "Authentication Success.",
                                         Toast.LENGTH_SHORT).show();
-                                //FirebaseUser user = mAuth.getCurrentUser();
-                                //updateUI(user);
+
+                                FirebaseUser user = mAuth.getCurrentUser();
                                 String uid = mAuth.getCurrentUser().getUid();
                                 DatabaseReference current_user_db = myRef.child(uid);
-                                current_user_db.child("Name").setValue(firstname);
+                                current_user_db.child("firstname").setValue(fname);
+                                current_user_db.child("lastname").setValue(lname);
+                                current_user_db.child("username").setValue(uname);
+                                current_user_db.child("empid").setValue(employeeid);
+                                current_user_db.child("dob").setValue(dob);
+                                current_user_db.child("designation").setValue(designation);
+                                current_user_db.child("organization").setValue(organization);
+
                                 mProgress.dismiss();
+                                updateUI(user);
                             } else {
                                 // If sign in fails, display a message to the user.
                                 Toast.makeText(Register.this, "Authentication failed?.",
                                         Toast.LENGTH_SHORT).show();
-                                //updateUI(null);
+                                mProgress.dismiss();
                             }
                         }
                     });
         }
-
     }
     //Change UI according to user data.
     public void  updateUI(FirebaseUser account){
-        if(account != null){
-            startActivity(new Intent(this,MainActivity.class));
-        }else {
-            Toast.makeText(this,"U Didnt signed in",Toast.LENGTH_LONG).show();
+        if(account != null) {
+            startActivity(new Intent(this, MainActivity.class));
         }
+    }
+    private void getViews()
+    {
+        firstname = findViewById(R.id.fname);
+        lastname = findViewById(R.id.lname);
+        username = findViewById(R.id.uname);
+        pass = findViewById(R.id.password);
+        cpass = findViewById(R.id.cpassword);
+        dateofbirth = findViewById(R.id.dob);
+        email = findViewById(R.id.email);
+        desig = findViewById(R.id.designation);
+        org = findViewById(R.id.organization);
+        reg = findViewById(R.id.register);
+        empid = findViewById(R.id.empid);
+    }
+    private void extractText()
+    {
+        email_id = email.getText().toString().trim();
+        password = pass.getText().toString().trim();
+        cpassword = cpass.getText().toString().trim();
+        fname = firstname.getText().toString().trim();
+        lname = lastname.getText().toString().trim();
+        uname = username.getText().toString().trim();
+        designation = desig.getText().toString().trim();
+        organization = org.getText().toString().trim();
+        employeeid = empid.getText().toString().trim();
+        dob = dateofbirth.getText().toString().trim();
+    }
+    private boolean check()
+    {
+        EditText fields[] = {firstname,lastname,username,empid,email,pass,cpass,dateofbirth,desig,org};
+
+        for(int i = 0; i < fields.length; i++)
+        {
+            if(TextUtils.isEmpty(fields[i].getText()))
+            {
+                fields[i].setError("Required Field");
+                return false;
+            }
+        }
+        return true;
+    }
+    private boolean validate(String actual_pass, String confirm_pass)
+    {
+        if(!actual_pass.equals(confirm_pass))
+        {
+            cpass.setError("Not matching");
+            return false;
+        }
+        return true;
     }
 }
 
